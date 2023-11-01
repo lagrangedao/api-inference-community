@@ -127,3 +127,55 @@ query({"inputs": "The answer to the universe is 42"}).then((response) =>  {{
        """
 
     return python_code, js_code, curl_code
+
+
+def text_generation_example(api_url: str) -> [str, str, str]:
+    def python_test_case(api_url: str) -> str:
+        import requests
+        API_TOKEN = "HUGGINGFACE_API_TOKEN"
+        headers = {"Authorization": f"Bearer {API_TOKEN}"}
+
+        API_URL = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta" # example 
+        def query(payload):
+            response = requests.post(API_URL, headers=headers, json=payload)
+            return response.json()
+        data = query({"inputs": "My name is Sarah Jessica Parker but you can call me Jessica"})
+        output = data['generated_text']
+        print(output)
+    
+    python_code = f"""
+import requests
+
+API_URL = {api_url}
+def query(payload):
+    response = requests.post(API_URL, headers=headers, json=payload)
+    return response.json()
+data = query({"inputs": "My name is Sarah Jessica Parker but you can call me Jessica"})
+output = data['generated_text']
+print(output)
+"""
+    curl_code = f"""
+    curl {api_url} \
+        --header "Content-Type: application/json" \
+        -X POST \
+        -d '{"inputs":"My name is Sarah Jessica Parker but you can call me Jessica"}'
+        """
+    js_code = f"""
+import fetch from "node-fetch";
+async function query(data) {{
+    const response = await fetch(
+        {api_url},
+        {{
+            method: "POST",
+            body: JSON.stringify(data),
+        }}
+    );
+    const result = await response.json();
+    return result;
+}}
+query({{inputs:"My name is Sarah Jessica Parker but you can call me Jessica"}}).then((response) => {{
+    console.log(JSON.stringify(response));
+}});
+"""
+    return python_code, js_code, curl_code
+    
