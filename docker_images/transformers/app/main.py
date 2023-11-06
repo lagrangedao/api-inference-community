@@ -12,7 +12,8 @@ from starlette.routing import Route
 from starlette.templating import Jinja2Templates
 from starlette.routing import Mount
 from starlette.staticfiles import StaticFiles
-from app.api_example import image_to_text_example, asr_example, text_speech_example, text_generation_example, summarization_example
+from app.api_example import (image_to_text_example, asr_example, text_speech_example, 
+                             text_generation_example, summarization_example,fill_mask_example)
 
 TASK = os.getenv("TASK")
 MODEL_ID = os.getenv("MODEL_ID")
@@ -61,6 +62,8 @@ async def homepage(request):
         result = text_generation_example(api_url)
     elif task == "summarization":
         result == summarization_example(api_url)
+    elif task == "fill-mask":
+        result == fill_mask_example(api_url)
 
     context = {'request': request, 'api_url': api_url, 'python_code': result[0],
                'javaScript_code': result[1], 'curl_code': result[2]}

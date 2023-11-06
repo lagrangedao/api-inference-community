@@ -225,3 +225,37 @@ def summarization_example(api_url: str) -> [str, str, str]:
         --header "Content-Type: application/json" """
         
     return python_code, js_code, curl_code
+
+def fill_mask_example(api_url: str) -> [str, str, str]:
+    python_code = f"""
+        import requests
+        
+        API_url = "{api_url}"
+        def query(payload):
+            response = requests.post(API_URL, headers=headers, json=payload)
+            return response.json()
+        data = query({"inputs": "The color of an apple is [MASK]."})
+        print(data) """
+    js_code = f"""
+        import fetch from "node-fetch";
+        async function query(data) {{
+            const response = await fetch(
+                "{api_url}",
+                {{
+                    method: "POST",
+                    body: JSON.stringify(data),
+                }}
+            );
+            const result = await response.json();
+            return result;
+        }}
+        query({{inputs:"The color of an apple is [MASK]."}}).then((response) => {{
+            console.log(JSON.stringify(response));
+        }}); """
+    curl_code = f"""
+        curl {api_url} \
+        -X POST \
+        -d '{"inputs":"The answer to the universe is [MASK]."}' \
+        --header "Content-Type: application/json" """
+    
+    return python_code, js_code, curl_code
